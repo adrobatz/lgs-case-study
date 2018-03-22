@@ -1,0 +1,29 @@
+.navbar{
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+}
+.navbar-logo{
+  display: flex;
+  justify-content: center;
+}
+
+.logo{
+  width: 124px;
+  height: 78px;
+  margin-top: 3%;
+}
+
+.categories{
+   display: flex;
+   justify-content: center;
+}
+
+.categories>li{
+  text-align: center;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 2%;
+}

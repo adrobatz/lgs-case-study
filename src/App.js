@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
+import Navbar from './Navbar'
 import './App.css';
 import {Link} from 'react-router-dom';
 
@@ -10,9 +11,12 @@ class App extends Component {
     this.state = {
       products: [],
       offset: 0,
-      limit: 10
+      limit: 10,
+      pageNumbers: [],
+      firstPage: false
       }
-    this.handleClick = this.handleClick.bind(this)
+      this.back = this.back.bind(this)
+      this.next = this.next.bind(this)
   }
   componentDidMount(){
     fetch('https://api-dev.luxurygaragesale.com/v1/products/')
@@ -36,41 +40,51 @@ class App extends Component {
       .catch(err =>{
         console.error(err)
       })
+
   }
 
-  handleClick(event){
-    console.log(this.props.match.params.productPage)
-    event.preventDefault();
-    this.setState({offset: (event.target.value - 1) * this.state.limit})
+  back(){
+    if (this.props.match.params.productPage === 1){
+      this.setState({firstPage: true})
+    } else if (this.props.match.params.productPage > 1){
+      var previousPage = Number(this.props.match.params.productPage) - 1
+      this.props.history.push(`/${previousPage}`)
+      this.setState({firstPage: false})
+    }
+  }
+
+  next(){
+    var nextPage = Number(this.props.match.params.productPage) + 1
+    this.props.history.push(`/${nextPage}`)
   }
 
   render() {
 
-//offset = (pageNumber - 1) * limit
-    //display page numbers
     var {limit, offset} = this.state
     var totalProducts = this.state.products
-    var productsPerPage = []
+    var currentPage = this.props.match.params.productPage
     var pageNumbers = []
     var pageCounter = 0
-    var currentPage = this.props.match.params.productPage
+
     for (var i = 0; i < totalProducts.length; i++){
       if (i % limit === 0){
         pageCounter++
         pageNumbers.push(pageCounter)
       }
     }
+    var lastPage = pageNumbers[pageNumbers.length-1] == Number(this.props.match.params.productPage)
     return (
       <div>
-      <h1>this is page {currentPage}</h1>
+      <Navbar />
+        <div className="all-products">
         {
           totalProducts.map(product =>{
-            if (totalProducts.indexOf(product) >= ((currentPage - 1) * limit) && totalProducts.indexOf(product) <= (limit*currentPage)){
+            if (totalProducts.indexOf(product) >= ((currentPage - 1) * limit) && totalProducts.indexOf(product) <= ((limit*currentPage) - 1)){
             return(
-            <div key={product.id}>
+            <div className="individual-product" key={product.id}>
             <img src={`https://photos.luxurygaragesale.com/small/${product.sku}_1.jpg`} alt="product img"/>
-            <h3>{product.name}</h3>
             <h4>{product.designer}</h4>
+            <h3>{product.name}</h3>
             <p>{product.size}</p>
             <p>${product.price}.00</p>
             </div>
@@ -78,8 +92,10 @@ class App extends Component {
             }
           })
         }
-        <div className="pageNumbers">
+        </div>
+        <div className="page-numbers">
           <ul>
+          <li><button disabled={this.state.firstPage} onClick={this.back}>back</button></li>
             {
             pageNumbers.map(page =>{
               return(
@@ -89,6 +105,7 @@ class App extends Component {
                      )
             })
             }
+            <li><button disabled={lastPage} onClick={this.next}>next</button></li>
           </ul>
         </div>
       </div>

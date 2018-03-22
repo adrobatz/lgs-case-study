@@ -1,29 +1,70 @@
-/*.App {
+@import './Navbar.css';
+
+
+body{
+  font-family: 'Oxygen', Sans-Serif;
+  font-size: 16px;
+}
+
+button{
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+li{
+  list-style: none;
+}
+
+
+.all-products{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 5%;
+  margin-top: 15%;
+}
+.individual-product{
+  flex: 1;
   text-align: center;
+  margin: 2%;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.individual-product>h4{
+  font-family: 'Oxygen', Sans-Serif;
+  font-size: 16px;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.individual-product>h3{
+  font-family: 'Oxygen', Sans-Serif;
+  font-size: 12px;
 }
 
-.App-title {
-  font-size: 1.5em;
+.individual-product>p{
+  font-family: 'Noto Serif', Serif;
+  font-size: 12px;
+  line-height: .5em;
 }
 
-.App-intro {
-  font-size: large;
+/* page numbers */
+.page-numbers>ul{
+  display: flex;
+  justify-content: center;
+}
+.page-numbers>ul>li{
+    margin: 2%;
+    text-decoration: none;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@media only screen and (max-device-width : 768px) {
+  .all-products{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 30%;
 }
-*/
+}
