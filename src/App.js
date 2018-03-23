@@ -3,23 +3,29 @@ import Navbar from './Navbar'
 import './App.css';
 import {Link} from 'react-router-dom';
 
-//CATEGORY PAGE - NO DETAILS
+
 class App extends Component {
       constructor(){
         super();
         this.state = {
           products: [],
           offset: 0,
-          limit: 24,
-          firstPage: false
+          limit: 48,
+          total: 0,
+          firstPage: false,
+          pages: []
         }
         this.back = this.back.bind(this)
         this.next = this.next.bind(this)
         this.fetchProducts = this.fetchProducts.bind(this)
+        this.changePageNumbers = this.changePageNumbers.bind(this)
       }
 
       componentDidMount(){
+        if (this.props.match.params.productPage){
+          this.setState({offset: (Number(this.props.match.params.productPage) - 1) * this.state.limit})
         this.fetchProducts()
+        }
       }
 
       componentDidUpdate(prevProps, prevState) {
@@ -35,6 +41,12 @@ class App extends Component {
             return response.json()
           })
           .then(products =>{
+            var totalPages = products.total / this.state.limit
+            var pageArr = []
+            for (var i = 0; i < totalPages; i++){
+              pageArr.push(i)
+            }
+            this.setState({pages: pageArr})
             var productArr = []
             products.hits.map(product =>{
               productArr.push({
@@ -45,7 +57,7 @@ class App extends Component {
                   name: product._source.name,
                   sku: product._source.sku
                 })
-              return this.setState({products: productArr})
+              this.setState({products: productArr})
             })
           })
           .catch(err =>{
@@ -63,10 +75,16 @@ class App extends Component {
         this.setState({offset: incrementedOffset})
       }
 
-      render() {
-        console.log('render', this.state)
-        var totalProducts = this.state.products
+      changePageNumbers(event){
+        if (event.target.value){
+          console.log(typeof event.target.value)
+          var newOffset = (event.target.value - 1) * this.state.limit
+          this.setState({offset: newOffset})
+        }
+      }
 
+      render() {
+        var totalProducts = this.state.products
         var lastPage = this.state.offset === 0
         return (
                 <div>
@@ -89,6 +107,15 @@ class App extends Component {
                 <div className="page-numbers">
                 <ul>
                 <li><button disabled={lastPage} onClick={this.back}>back</button></li>
+                {
+                  this.state.pages.map(page =>{
+                    return(
+                           <li key={page}>
+                           <a href={`/${page}`} onClick={this.changePageNumbers}>{page}</a>
+                           </li>
+                           )
+                  })
+                }
                 <li><button onClick={this.next}>next</button></li>
                 </ul>
                 </div>

@@ -7,7 +7,12 @@ import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render((
     <BrowserRouter>
-      <Route path='/' component={App} />
+    <Switch>
+      <Route path='/:productPage' component={App} />
+      <Route exact path='/' render={()=>
+        <Redirect to='/1'/>
+      } />
+      </Switch>
     </BrowserRouter>
     ),
     document.getElementById('root'));
