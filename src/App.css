@@ -19,6 +19,20 @@ li{
   list-style: none;
 }
 
+a{
+  text-decoration: none;
+  color: black;
+}
+
+.active{
+  font-weight: 700;
+  background-color: lightgray;
+  border-radius: 50%;
+  padding: 10px;
+}
+.in-active{
+  text-decoration: none;
+}
 .all-products{
   display: flex;
   flex-wrap: wrap;
@@ -54,8 +68,13 @@ li{
   justify-content: center;
 }
 .page-numbers>ul>li{
-    margin: 2%;
+    margin: 1%;
     text-decoration: none;
+}
+
+.total-pages{
+  text-align: center;
+  margin-bottom: 2%;
 }
 
 @media only screen and (max-device-width : 768px) {
