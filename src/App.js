@@ -22,7 +22,6 @@ class App extends Component {
 
       componentDidMount(){
         if (this.props.match.params.productPage){
-          this.setState({offset: (Number(this.props.match.params.productPage) - 1) * this.state.limit})
           this.fetchProducts()
         }
       }
@@ -35,6 +34,7 @@ class App extends Component {
       }
 
       fetchProducts(){
+        var fetchOffset = (Number(this.props.match.params.productPage) - 1) * this.state.limit
         fetch(`https://api-dev.luxurygaragesale.com/v1/products/?offset=${this.state.offset}&limit=${this.state.limit}`)
           .then(response =>{
             return response.json()
@@ -56,7 +56,7 @@ class App extends Component {
                   sku: product._source.sku
                 })
             })
-            this.setState({products: productArr, pages: pageArr, total: products.total})
+            this.setState({products: productArr, pages: pageArr, total: products.total, offset: fetchOffset})
           })
           .catch(err =>{
             console.error(err)
