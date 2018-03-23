@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Navbar from './Navbar'
 import './App.css';
-import {Link} from 'react-router-dom';
 
 
 class App extends Component {
@@ -12,7 +11,7 @@ class App extends Component {
           offset: 0,
           limit: 48,
           total: 0,
-          firstPage: false,
+          active: false,
           pages: []
         }
         this.back = this.back.bind(this)
@@ -24,7 +23,7 @@ class App extends Component {
       componentDidMount(){
         if (this.props.match.params.productPage){
           this.setState({offset: (Number(this.props.match.params.productPage) - 1) * this.state.limit})
-        this.fetchProducts()
+          this.fetchProducts()
         }
       }
 
@@ -67,17 +66,20 @@ class App extends Component {
 
       back(){
         var decrementedOffset = this.state.offset - this.state.limit
+        var previousPage = Number(this.props.match.params.productPage) - 1
         this.setState({offset: decrementedOffset})
+        this.props.history.push(`/${previousPage}`)
       }
 
       next(){
         var incrementedOffset = this.state.offset + this.state.limit
+        var nextPage = Number(this.props.match.params.productPage) + 1
         this.setState({offset: incrementedOffset})
+        this.props.history.push(`/${nextPage}`)
       }
 
       changePageNumbers(event){
         if (event.target.value){
-          console.log(typeof event.target.value)
           var newOffset = (event.target.value - 1) * this.state.limit
           this.setState({offset: newOffset})
         }
@@ -85,7 +87,15 @@ class App extends Component {
 
       render() {
         var totalProducts = this.state.products
+        var {pages} = this.state
         var lastPage = this.state.offset === 0
+        var currentPage = Number(this.props.match.params.productPage)
+        var displayPages = []
+        if (currentPage <= 5){
+          displayPages = pages.slice(1,11)
+        } else {
+          displayPages = pages.slice((currentPage - 5), (currentPage + 5))
+        }
         return (
                 <div>
                 <Navbar />
@@ -107,8 +117,11 @@ class App extends Component {
                 <div className="page-numbers">
                 <ul>
                 <li><button disabled={lastPage} onClick={this.back}>back</button></li>
+                {!(currentPage >= 1 && currentPage < 7) &&
+                  <li><a href={`/1`} onClick={this.changePageNumbers}>{1}</a>  ...</li>
+                }
                 {
-                  this.state.pages.map(page =>{
+                  displayPages.map(page =>{
                     return(
                            <li key={page}>
                            <a href={`/${page}`} onClick={this.changePageNumbers}>{page}</a>
@@ -116,8 +129,14 @@ class App extends Component {
                            )
                   })
                 }
+                {!(currentPage <= pages[pages.length-1] && currentPage >= pages[pages.length-5]) &&
+                  <li>...  <a href={`/${pages[pages.length-1]}`} onClick={this.changePageNumbers}>{pages[pages.length-1]}</a></li>
+                }
+
                 <li><button onClick={this.next}>next</button></li>
+
                 </ul>
+                <p className="total-pages">{pages[pages.length - 1]} total pages</p>
                 </div>
                 </div>
                 );
