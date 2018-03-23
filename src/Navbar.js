@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 
-
-//CATEGORY PAGE - NO DETAILS
 class Navbar extends Component {
   constructor(){
     super();
-    this.state = {
-      categories: []
-      }
-
   }
-
-
 
   render() {
 
