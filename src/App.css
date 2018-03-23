@@ -25,7 +25,13 @@ a{
 }
 
 .active{
-  text-decoration: underline;
+  font-weight: 700;
+  background-color: lightgray;
+  border-radius: 50%;
+  padding: 10px;
+}
+.in-active{
+  text-decoration: none;
 }
 .all-products{
   display: flex;

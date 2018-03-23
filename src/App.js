@@ -45,10 +45,9 @@ class App extends Component {
             for (var i = 0; i < totalPages; i++){
               pageArr.push(i)
             }
-            this.setState({pages: pageArr})
             var productArr = []
             products.hits.map(product =>{
-              productArr.push({
+              return productArr.push({
                   id: product._id,
                   size: product._source.brandSize,
                   designer: product._source.designer,
@@ -56,8 +55,8 @@ class App extends Component {
                   name: product._source.name,
                   sku: product._source.sku
                 })
-              this.setState({products: productArr})
             })
+            this.setState({products: productArr, pages: pageArr, total: products.total})
           })
           .catch(err =>{
             console.error(err)
@@ -92,9 +91,9 @@ class App extends Component {
         var currentPage = Number(this.props.match.params.productPage)
         var displayPages = []
         if (currentPage <= 5){
-          displayPages = pages.slice(1,11)
+          displayPages = pages.slice(1,6)
         } else {
-          displayPages = pages.slice((currentPage - 5), (currentPage + 5))
+          displayPages = pages.slice((currentPage - 2), (currentPage + 3))
         }
         return (
                 <div>
@@ -116,7 +115,7 @@ class App extends Component {
                 </div>
                 <div className="page-numbers">
                 <ul>
-                <li><button disabled={lastPage} onClick={this.back}>back</button></li>
+                <li><button disabled={lastPage} onClick={this.back}>{`< Previous`}</button></li>
                 {!(currentPage >= 1 && currentPage < 7) &&
                   <li><a href={`/1`} onClick={this.changePageNumbers}>{1}</a>  ...</li>
                 }
@@ -124,7 +123,12 @@ class App extends Component {
                   displayPages.map(page =>{
                     return(
                            <li key={page}>
-                           <a href={`/${page}`} onClick={this.changePageNumbers}>{page}</a>
+                           {currentPage === page ? (
+                                <a href={`/${page}`} onClick={this.changePageNumbers} className="active">{page}</a>
+                                ) : (
+                                <a href={`/${page}`} onClick={this.changePageNumbers} className="in-active">{page}</a>
+                                )
+                            }
                            </li>
                            )
                   })
@@ -133,10 +137,10 @@ class App extends Component {
                   <li>...  <a href={`/${pages[pages.length-1]}`} onClick={this.changePageNumbers}>{pages[pages.length-1]}</a></li>
                 }
 
-                <li><button onClick={this.next}>next</button></li>
+                <li><button onClick={this.next}>{`Next >`}</button></li>
 
                 </ul>
-                <p className="total-pages">{pages[pages.length - 1]} total pages</p>
+                <p className="total-pages">{this.state.total} total products</p>
                 </div>
                 </div>
                 );
