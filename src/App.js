@@ -37,8 +37,7 @@ class App extends Component {
       .catch(err =>{
         console.error(err)
       })
-
-      }
+  }
 
       back(){
         if (this.props.match.params.productPage === 1){
@@ -57,7 +56,7 @@ class App extends Component {
 
       render() {
 
-        var {limit, offset} = this.state
+        var {limit} = this.state
         var totalProducts = this.state.products
         var currentPage = this.props.match.params.productPage
         var pageNumbers = []
@@ -69,7 +68,7 @@ class App extends Component {
             pageNumbers.push(pageCounter)
           }
         }
-        var lastPage = pageNumbers[pageNumbers.length-1] == Number(this.props.match.params.productPage)
+        var lastPage = pageNumbers[pageNumbers.length-1] === Number(this.props.match.params.productPage)
         return (
                 <div>
                 <Navbar />
